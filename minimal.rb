@@ -46,6 +46,30 @@ file 'Procfile', <<-YAML
 web: bundle exec puma -C config/puma.rb
 YAML
 
+# Database conf file
+########################################
+inside 'config' do
+  database_conf = <<-EOF
+default: &default
+  adapter: sqlite3
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: #{app_name}_development
+
+test:
+  <<: *default
+  database: #{app_name}_test
+
+production:
+  <<: *default
+  database: #{app_name}_production %>
+EOF
+  file 'database.yml', database_conf, force: true
+end
+
 # Assets
 ########################################
 run 'rm -rf app/assets/stylesheets'
@@ -98,7 +122,7 @@ generators = <<-RUBY
 config.generators do |generate|
       generate.assets false
       generate.helper false
-      generate.test_framework  :test_unit, fixture: false
+      generate.test_framework :test_unit, fixture: false
     end
 RUBY
 
@@ -123,6 +147,7 @@ after_bundle do
   run 'rm .gitignore'
   file '.gitignore', <<-TXT
 .bundle
+.clever.json
 log/*.log
 tmp/**/*
 tmp/*
