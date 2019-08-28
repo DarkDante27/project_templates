@@ -4,7 +4,7 @@ You can quickly generate a rails app with le wagon's config.
 
 All credits to le wagon team for these templates (all written by them), I just edited out the commits and added support for sqlite3 DB.
 
-# Installation with SQLITE3 Database
+# Installation with SQLITE Database
 
 ## Minimal Installation
 
